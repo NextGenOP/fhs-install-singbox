@@ -3,8 +3,8 @@
 
 # This Bash script to install the latest release of geoip.dat and geosite.dat:
 
-# https://github.com/v2fly/geoip
-# https://github.com/v2fly/domain-list-community
+# https://github.com/SagerNet/sing-geoip
+# https://github.com/SagerNet/sing-geosite
 
 # Depends on cURL, please solve it yourself
 
@@ -15,14 +15,14 @@
 # 0 0 * * * /usr/local/bin/install-dat-release > /dev/null 2>&1
 
 # You can set this variable whatever you want in shell session right before running this script by issuing:
-# export DAT_PATH='/usr/local/lib/v2ray'
-DAT_PATH=${DAT_PATH:-/usr/local/share/v2ray}
+# export DAT_PATH='/usr/local/lib/sing-box'
+DAT_PATH=${DAT_PATH:-/usr/local/share/sing-box}
 
-DOWNLOAD_LINK_GEOIP="https://github.com/v2fly/geoip/releases/latest/download/geoip.dat"
-DOWNLOAD_LINK_GEOSITE="https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat"
-file_ip='geoip.dat'
+DOWNLOAD_LINK_GEOIP="https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db"
+DOWNLOAD_LINK_GEOSITE="https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db"
+file_ip='geoip.db'
 file_dlc='dlc.dat'
-file_site='geosite.dat'
+file_site='geosite.db'
 dir_tmp="$(mktemp -d)"
 
 curl() {
@@ -48,26 +48,26 @@ download_files() {
     echo 'error: Download failed! Please check your network or try again.'
     exit 1
   fi
-  if ! curl -R -H 'Cache-Control: no-cache' -o "${dir_tmp}/${2}.sha256sum" "${1}.sha256sum"; then
-    echo 'error: Download failed! Please check your network or try again.'
-    exit 1
-  fi
+  # if ! curl -R -H 'Cache-Control: no-cache' -o "${dir_tmp}/${2}.sha256sum" "${1}.sha256sum"; then
+  #   echo 'error: Download failed! Please check your network or try again.'
+  #   exit 1
+  # fi
 }
 
-check_sum() {
-  (
-    cd "${dir_tmp}" || exit
-    for i in "${dir_tmp}"/*.sha256sum; do
-      if ! sha256sum -c "${i}"; then
-        echo 'error: Check failed! Please check your network or try again.'
-        exit 1
-      fi
-    done
-  )
-}
+# check_sum() {
+#   (
+#     cd "${dir_tmp}" || exit
+#     for i in "${dir_tmp}"/*.sha256sum; do
+#       if ! sha256sum -c "${i}"; then
+#         echo 'error: Check failed! Please check your network or try again.'
+#         exit 1
+#       fi
+#     done
+#   )
+# }
 
 install_file() {
-  install -m 644 "${dir_tmp}"/${file_dlc} "${DAT_PATH}"/${file_site}
+  install -m 644 "${dir_tmp}"/${file_site} "${DAT_PATH}"/${file_site}
   install -m 644 "${dir_tmp}"/${file_ip} "${DAT_PATH}"/${file_ip}
   rm -r "${dir_tmp}"
 }
@@ -75,7 +75,7 @@ install_file() {
 main() {
   check_if_running_as_root
   download_files $DOWNLOAD_LINK_GEOIP $file_ip
-  download_files $DOWNLOAD_LINK_GEOSITE $file_dlc
+  download_files $DOWNLOAD_LINK_GEOSITE $file_site
   check_sum
   install_file
 }
