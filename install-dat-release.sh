@@ -16,7 +16,7 @@
 
 # You can set this variable whatever you want in shell session right before running this script by issuing:
 # export DAT_PATH='/usr/local/lib/sing-box'
-DAT_PATH=${DAT_PATH:-/usr/local/sing-box}
+DAT_PATH=${DAT_PATH:-/usr/local/etc/sing-box}
 
 DOWNLOAD_LINK_GEOIP="https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db"
 DOWNLOAD_LINK_GEOSITE="https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db"
